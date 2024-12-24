@@ -39,9 +39,10 @@ const MainLayout: React.FC = () => {
     }, []);
     const handleChangeKey = (keys: string[]) => {
         setSelectedKeys(keys);
+        window.scrollTo(0, 0);
     };
     return (
-        <Layout style={{ minHeight: '100vh', overflowX: 'hidden' }}>
+        <Layout style={{ minHeight: '100vh', overflow: 'hidden' }}>
             <Affix offsetTop={0}>
                 <Sider width={'15vw'} style={{ height: '100vh' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
                     <div style={{ height: '32px', margin: '16px', background: 'rgba(255, 255, 255, .2)', borderRadius: '6px' }}></div>

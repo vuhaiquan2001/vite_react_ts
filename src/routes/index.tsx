@@ -4,6 +4,7 @@ import MainLayout from '@/layout';
 import NotFound from '@/app/pages/NotFound';
 import { Form, Map, Chart } from '@/routes/LazyComponents';
 import { FallbackLoading } from '@/components/ui/FallbackLoading';
+
 export const router = createBrowserRouter([
     {
         path: '/',
