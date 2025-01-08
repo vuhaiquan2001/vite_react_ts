@@ -16,8 +16,8 @@
         "jsx": "react-jsx",
 
         "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
+        "noUnusedLocals": false, // bắt lỗi không sử dụng biến được khai báo
+        "noUnusedParameters": false, // bắt lỗi không sử dụng tham số được khai báo
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
         /* alias */
