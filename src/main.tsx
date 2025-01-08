@@ -1,10 +1,7 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '@/setting/index.scss';
 import App from './App.tsx';
+import setupAxios from '@/setting/AxiosSetup';
 
-createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-        <App />
-    </StrictMode>
-);
+setupAxios();
+createRoot(document.getElementById('root')!).render(<App />);

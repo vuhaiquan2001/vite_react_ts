@@ -19,6 +19,11 @@ Currently, two official plugins are available:
 
 - [React-router-dom] use [^7.0.2]
 
+# API & Fetch
+
+- [Axios] use [^1.7.9] dùng để gửi request đến server
+- [@tanstack/react-query] use [^5.62.11] dùng để quản lý state của request
+
 # UI
 
 - [Antd] use [^5.22.5]

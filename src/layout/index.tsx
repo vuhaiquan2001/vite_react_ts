@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { HomeOutlined, FormOutlined, InfoCircleOutlined, UserOutlined, SunFilled, MoonFilled } from '@ant-design/icons';
+import {
+    HomeOutlined,
+    FormOutlined,
+    InfoCircleOutlined,
+    UserOutlined,
+    SunFilled,
+    MoonFilled,
+    CalendarOutlined,
+    // TagOutlined,
+    MenuOutlined,
+    TableOutlined,
+    GlobalOutlined,
+    LogoutOutlined,
+} from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Affix, Breadcrumb, Layout, Menu, Switch, theme } from 'antd';
+import { Affix, Avatar, Dropdown, Flex, Layout, Menu, Switch, theme } from 'antd';
 import { Link, Outlet } from 'react-router-dom';
 import { useTheme } from '@/setting/AntdProvider';
-
+import './index.scss';
 const { Header, Content, Footer, Sider } = Layout;
 type MenuItem = Required<MenuProps>['items'][number];
-
+import { useDeviceScreen } from '@/utils/hooks/useDivices';
 function getItem(label: React.ReactNode, key: string, icon?: React.ReactNode, children?: MenuItem[]): MenuItem {
     return {
         key,
@@ -19,9 +32,11 @@ function getItem(label: React.ReactNode, key: string, icon?: React.ReactNode, ch
 
 const items: MenuItem[] = [
     getItem('Home', 'home', <HomeOutlined />),
-    getItem('Form', 'form', <FormOutlined />),
-    getItem('Chart', 'chart', <FormOutlined />),
-    getItem('Map', 'map', <FormOutlined />),
+    getItem('Today', 'today', <FormOutlined />),
+    getItem('Calendar', 'calendar', <CalendarOutlined />),
+    getItem('Map', 'map', <GlobalOutlined />),
+    // getItem('Tag', 'tag', <TagOutlined />),
+    getItem('List', 'list', <TableOutlined />),
     getItem('About', 'about', <InfoCircleOutlined />),
     getItem('User', '', <UserOutlined />, [getItem('Tom', '4'), getItem('Bill', '5'), getItem('Alex', '6')]),
 ];
@@ -29,13 +44,14 @@ const items: MenuItem[] = [
 const MainLayout: React.FC = () => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
     const [selectedKeys, setSelectedKeys] = useState<string[]>(['home']);
+    const device = useDeviceScreen();
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
     const { isDarkMode, toggleTheme } = useTheme();
     useEffect(() => {
         const pathname = window.location.pathname.split('/')[1];
-        setSelectedKeys([pathname]);
+        setSelectedKeys([pathname || 'home']);
     }, []);
     const handleChangeKey = (keys: string[]) => {
         setSelectedKeys(keys);
@@ -43,24 +59,47 @@ const MainLayout: React.FC = () => {
     };
     return (
         <Layout style={{ minHeight: '100vh', overflow: 'hidden' }}>
-            <Affix offsetTop={0}>
-                <Sider width={'15vw'} style={{ height: '100vh' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                    <div style={{ height: '32px', margin: '16px', background: 'rgba(255, 255, 255, .2)', borderRadius: '6px' }}></div>
+            {/* hidden menu on mobile */}
+            {device !== 'mobile' && (
+                <Affix offsetTop={0}>
+                    <Sider width={'15vw'} style={{ height: '100vh' }} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+                        <div className="header-logo">{collapsed ? 'TN' : 'TAKE A NOTE'}</div>
+                        <Menu theme="dark" onSelect={(selected) => handleChangeKey([selected.key])} selectedKeys={selectedKeys} mode="inline" items={items} />
+                    </Sider>
+                </Affix>
+            )}
+            {/* Menu when mobile and not collapsed fixed on top */}
+            {device === 'mobile' && !collapsed && (
+                <div className="menu-mobile">
+                    {/* Menu */}
                     <Menu theme="dark" onSelect={(selected) => handleChangeKey([selected.key])} selectedKeys={selectedKeys} mode="inline" items={items} />
-                </Sider>
-            </Affix>
+                </div>
+            )}
+            {/* Layout */}
             <Layout>
                 <Affix offsetTop={0}>
-                    <Header style={{ padding: '0 16px', background: colorBgContainer, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <Switch checked={isDarkMode} onChange={toggleTheme} checkedChildren={<SunFilled />} unCheckedChildren={<MoonFilled />} />
+                    <Header style={{ padding: '0 16px', background: colorBgContainer }}>
+                        <Flex gap={12} justify="flex-end" align="center" style={{ width: '100%', height: '100%' }}>
+                            <Switch title={isDarkMode ? 'Dark mode' : 'Light mode'} checked={isDarkMode} onChange={toggleTheme} checkedChildren={<SunFilled />} unCheckedChildren={<MoonFilled />} />
+                            {/* Menu on mobile */}
+                            {device === 'mobile' && <MenuOutlined onClick={() => setCollapsed(!collapsed)} style={{ fontSize: 24 }} />}
+
+                            <Dropdown menu={{ items: [{ label: 'Đăng xuất', key: 'logout', icon: <LogoutOutlined />, style: { color: 'red' } }], style: { minWidth: 150 } }} trigger={['click']}>
+                                <Avatar size={32} style={{ cursor: 'pointer', userSelect: 'none' }}>
+                                    AG
+                                </Avatar>
+                            </Dropdown>
+                        </Flex>
                     </Header>
                 </Affix>
                 <Content style={{ margin: '0 16px' }}>
-                    <Breadcrumb items={[{ title: 'User' }, { title: 'Bill' }]} style={{ margin: '16px 0' }}></Breadcrumb>
+                    {/* <Breadcrumb items={[{ title: breadcrumbMapping[selectedKeys[0] as keyof typeof breadcrumbMapping] }]} style={{ margin: '16px 0' }}></Breadcrumb> */}
                     <div
                         style={{
+                            margin: '32px 0',
                             padding: 24,
                             minHeight: 360,
+                            height: 'fit-content',
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
                         }}
